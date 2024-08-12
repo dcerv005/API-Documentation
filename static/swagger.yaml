@@ -1,0 +1,372 @@
+swagger: '2.0'
+info:
+  title: "Factory Management System API"
+  description: "This is an API to manage a Factory Management System API"
+  version: "1.0.0"
+host: "127.0.0.1:5000"
+schemes:
+  - "http"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+securityDefinitions: 
+  bearerAuth: 
+    type: apiKey
+    name: Authorization
+    in: header
+paths:
+  /orders:
+    post:
+      tags:
+        - orders
+      summary: "Create order endpoint"
+      description: "Endpoint to create orders"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Information to create order"
+          required: true
+          schema:
+            $ref : "#/definitions/Order"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            $ref: "#/definitions/Order"
+      security:
+        - bearerAuth: []
+  /orders/paginate:
+    get:
+      tags:
+        - orders
+      summary: "Get orders endpoint"
+      description: "Endpoint to get all orders"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Order"
+        
+      security:
+        - bearerAuth: []
+  /customers:
+    post:
+      tags:
+        - customers
+      summary: "Create customer endpoint"
+      description: "Endpoint to create customers"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Information to create customers"
+          required: true
+          schema:
+            $ref : "#/definitions/Customer"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            $ref: "#/definitions/Customer"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#definitions/Error"
+          examples:
+            application/json:
+              value:
+                status: "Error"
+                message: "Invalid Credentials"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Error"
+          examples:
+            application/json:
+              value:
+                status: "error"
+                message: "token is missing | token has expired | invalid token"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Error"
+          examples:
+            application/json:
+              value:
+                status: "error"
+                message: "User does not have the required role"
+      security:
+        - bearerAuth: []
+  
+    get:
+      tags:
+        - customers
+      summary: "Get customer endpoint"
+      description: "Endpoint to get all customers"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Customer"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#definitions/Error"
+          examples:
+            application/json:
+              value:
+                status: "Error"
+                message: "Invalid Credentials"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Error"
+          examples:
+            application/json:
+              value:
+                status: "error"
+                message: "token is missing | token has expired | invalid token"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Error"
+          examples:
+            application/json:
+              value:
+                status: "error"
+                message: "User does not have the required role"
+        
+      security:
+        - bearerAuth: []
+  /employees:
+    post:
+      tags:
+        - employees
+      summary: "Create employee endpoint"
+      description: "Endpoint to create employees"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Information to create employees"
+          required: true
+          schema:
+            $ref : "#/definitions/Employee"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            $ref: "#/definitions/Employee"
+      security:
+        - bearerAuth: []
+    get:
+      tags:
+        - employees
+      summary: "Get employees endpoint"
+      description: "Endpoint to get all employees"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Employee"
+        
+      security:
+        - bearerAuth: []
+  /products:
+    post:
+      tags:
+        - products
+      summary: "Create product endpoint"
+      description: "Endpoint to create products"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Information to create products"
+          required: true
+          schema:
+            $ref : "#/definitions/Product"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            $ref: "#/definitions/Product"
+      security:
+        - bearerAuth: []
+  /products/paginate:
+    get:
+      tags:
+        - products
+      summary: "Get products endpoint"
+      description: "Endpoint to get all products"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Product"
+        
+      security:
+        - bearerAuth: []
+  /productions:
+    post:
+      tags:
+        - productions
+      summary: "Create production endpoint"
+      description: "Endpoint to create productions"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Information to create productions"
+          required: true
+          schema:
+            $ref : "#/definitions/Production"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            $ref: "#/definitions/Production"
+      security:
+        - bearerAuth: []
+    get:
+      tags:
+        - productions
+      summary: "Get productions endpoint"
+      description: "Endpoint to get all productions"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Production"
+        
+      security:
+        - bearerAuth: []
+definitions:
+  Error:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+        description: "Status of the error"
+      message:
+        type: "string"
+        description: "Description of the error"
+    required:
+      - "status"
+      - "message"
+  Order:
+    type: "object"
+    properties:
+      customer_id:
+        type: "integer"
+        format: "int64"
+        description: "ID of the customer placing the order"
+      product_id:
+        type: "integer"
+        format: "int64"
+        description: "ID of the product being ordered"
+      quantity:
+        type: "integer"
+        format: "int64"
+        description: "Quantity of the product ordered"
+      total_price:
+        type: "number"
+        format: "float"
+        description: "Total price of the order."
+      id: 
+        type: "integer"
+        format: "int64"
+        description: "Orders unique ID"
+    required:
+      - "customer_id"
+      - "product_id"
+      - "quantity"
+      - "total_price"
+      - "id"
+  Customer:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "Name of the Customer"
+      email:
+        type: "string"
+        description: "Email of the Customer"
+      phone:
+        type: "string"
+        description: "Phone number of the Customer"
+      id: 
+        type: "integer"
+        format: "int64"
+        description: "Customers unique ID"
+    required:
+      - "name"
+      - "email"
+      - "phone"
+      - "id"
+  Employee:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "Name of the Employee"
+      position:
+        type: "string"
+        description: "Position of the employee"
+      id: 
+        type: "integer"
+        format: "int64"
+        description: "Employees unique ID"
+    required:
+      - "name"
+      - "position"
+      - "id"
+  Product:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "Name of the Product"
+      price:
+        type: "number"
+        format: "float"
+        description: "Price of the Product"
+      id: 
+        type: "integer"
+        format: "int64"
+        description: "Products unique ID"
+    required:
+      - "name"
+      - "price"
+      - "id"
+  Production:
+    type: "object"
+    properties:
+      product_id:
+        type: "integer"
+        format: "int64"
+        description: "Product unique ID"
+      quantity_produced:
+        type: "integer"
+        format: "int64"
+        description: "Quantity of product produced"
+      date_produced: 
+        type: "string"
+        format: "date"
+        description: "Date product was produced"
+      id: 
+        type: "integer"
+        format: "int64"
+        description: "Productions unique ID"
+      required:
+        - "product_id"
+        - "quantity_produced"
+        - "date_produced"
+        - "id"
